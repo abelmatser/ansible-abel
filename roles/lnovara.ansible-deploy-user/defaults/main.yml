@@ -11,7 +11,7 @@ user_shell: /bin/bash
 
 # List of public key files for user's .ssh/authorized_keys
 public_keys:
-  - ~/.ssh/id_rsa.pub
+  - ~/.ssh/ServerAccess.pub
 
 # Enable passwordless sudo
 enable_passwordless_sudo: True

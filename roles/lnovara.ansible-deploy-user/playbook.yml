@@ -1,7 +1,14 @@
 ---
 
-- name: Create deploy user on all hosts.
-  hosts: all
+# - name: Create deploy user on all hosts.
+  # hosts: all
+  # roles:
+  #   - { role: lnovara.deploy-user,
+  #       user_groups: [foo, bar] }
+
+- name: Create abel user on networkutils.
+  hosts: networkutils
   roles:
-    - { role: lnovara.deploy-user,
-        user_groups: [foo, bar] }
+    - { role: '~/ansible-abel/roles/lnovara.ansible-deploy-user',
+        user_name: abel,
+        user_groups: []}
