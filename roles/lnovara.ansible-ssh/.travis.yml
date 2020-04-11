@@ -1,0 +1,31 @@
+---
+
+language: python
+python:
+  - 2.7
+  - 3.6
+
+sudo: required
+
+# Enable the docker service
+services:
+  - docker
+
+# Parallel testing of supported Ansible versions
+env:
+  matrix:
+    - ANSIBLE=2.2
+    - ANSIBLE=2.3
+    - ANSIBLE=2.4
+    - ANSIBLE=2.5
+
+# Install tox
+install:
+  - pip install tox-travis
+
+# Tests all the scenarios
+script:
+  - tox
+
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/
