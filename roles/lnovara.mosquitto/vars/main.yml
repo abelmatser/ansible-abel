@@ -7,8 +7,8 @@ mosquitto_sources:
     - "{{ ansible_distribution_release | lower }}"
   components:
     - main
-      #  options:
-      #    Arch: amd64
+    #  options:
+    #    Arch: amd64
   gpg_fingerprint: 8277CCB49EC5B595F2D2C71361611AE430993623
   gpg_url: "http://repo.mosquitto.org/{{ ansible_distribution | lower }}/mosquitto-repo.gpg.key"
 

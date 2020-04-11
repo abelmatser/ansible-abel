@@ -71,7 +71,7 @@
         cut -d ':' -f 1 "{{ mosquitto_config.password_file }}"
       register: mosquitto_users_list
 
-    - name: Remove Mosquitto user/password entries #TODO this does not work.
+    - name: Remove Mosquitto user/password entries  # TODO this does not work.
       command:
         mosquitto_passwd -D "{{ mosquitto_config.password_file }}" "{{ item.name }}"
       when:
