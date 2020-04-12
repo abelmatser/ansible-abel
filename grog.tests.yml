@@ -68,15 +68,12 @@
 
     - role: grog.management-user
       become: yes
-      management_user_key: "{{ lookup('file', '~/.ssh/ServerAccess.pub') }}"
-
       management_user_settings:
         name: abel
         comment: Ansible
         shell: '/bin/bash'
         authorized_keys:
           - key: "{{ lookup('file', '~/.ssh/ServerAccess.pub') }}"
-          # - key: "{{ management_user_key }}"
             exclusive: yes  # Whether to remove all other non-specified keys from the authorized_keys file.
             path: '/home/abel/.ssh/authorized_keys'
         sudo:
@@ -87,6 +84,6 @@
     
     - role: geerlingguy.security
       become: yes
-      security_ssh_permit_root_login: "yes"  # default: no
+      # security_ssh_permit_root_login: "yes"  # default: no
       security_sudoers_passwordless: abel
       security_autoupdate_mail_to: abelmatser+security@gmail.com
