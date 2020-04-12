@@ -7,47 +7,27 @@
   hosts: ansible-client3
   roles:
         
-    - role: lnovara.deploy-user
+    - role: grog.management-user
       become: yes
-      user_name: abel
-      # user_groups:
-        # - users
-        # - docker
-      public_keys:
-        - ~/.ssh/ServerAccess.pub
-      enable_passwordless_sudo: false
-
+      management_user_settings:
+        name: abel
+        comment: Ansible
+        shell: '/bin/bash'
+        authorized_keys:
+          - key: "{{ lookup('file', '~/.ssh/ServerAccess.pub') }}"
+            exclusive: yes  # Whether to remove all other non-specified keys from the authorized_keys file.
+            path: '/home/abel/.ssh/authorized_keys'
+        sudo:
+          hosts: ALL
+          as: ALL
+          commands: ALL
+          nopasswd: yes
+    
     - role: geerlingguy.security
       become: yes
       # security_ssh_permit_root_login: "yes"  # default: no
       security_sudoers_passwordless: abel
       security_autoupdate_mail_to: abelmatser+security@gmail.com
-
-
-    - role: grog.user
-      become: yes
-      # user_list: abel
-      user_list:
-        - name: abel
-      user_list:
-        - name: user1
-        - name: user2
-          uid: 1001
-          groups:
-            - test
-            - sudo
-        - name: user3
-          uid: 1002
-          state: absent
-      user_list_host: []
-      user_list_group:
-        - name: user
-          uid: 1001
-        - name: test
-          state: absent
-      user_shell: '/bin/sh'
-      user_system: no
-      user_update_password: always
 
     - role: geerlingguy.docker
       become: yes
