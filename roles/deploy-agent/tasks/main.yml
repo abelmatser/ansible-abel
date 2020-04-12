@@ -1,0 +1,21 @@
+---
+
+- name: Create agent group
+  group:
+    name: "{{ agent_group }}"
+    system: true
+    state: present
+
+- name: Create agent user
+  user:
+    name: "{{ agent_user }}"
+    group: "{{ agent_group }}"
+    groups: "{{ agent_add_groups | join(',') }}"
+    append: true
+    home: "{{ agent_home }}"
+    shell: /usr/sbin/nologin
+    system: true
+    state: present
+  # notify:
+  #   - Restart Mosquitto
+

@@ -1,0 +1,9 @@
+---
+
+agent_user: default_agent
+
+agent_group: default_agent
+
+agent_home: /var/lib/{{agent_user}}
+
+agent_add_groups: []
