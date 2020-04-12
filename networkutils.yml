@@ -29,15 +29,15 @@
       security_sudoers_passwordless: abel
       security_autoupdate_mail_to: abelmatser+security@gmail.com
 
-    - role: geerlingguy.docker
-      become: yes
-      docker_users: docker
+    # - role: geerlingguy.docker
+    #   become: yes
+    #   docker_users: docker
     # - role: geerlingguy.docker_arm
     #   become: yes
     #   docker_users: []
 
-    - role: geerlingguy.git
-      become: yes
+    # - role: geerlingguy.git
+    #   become: yes
 
     - role: lnovara.mosquitto
       become: yes
