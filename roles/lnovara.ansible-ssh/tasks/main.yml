@@ -1,5 +1,0 @@
----
-
-- include: ssh_client.yml
-
-- include: ssh_server.yml

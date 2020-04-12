@@ -1,8 +1,0 @@
----
-
-- name: Set up ssh server
-  hosts: networkutils
-  roles:
-    - { role: '~/ansible-abel/roles/lnovara.ansible-ssh',
-        user_name: abel,
-        user_groups: []}

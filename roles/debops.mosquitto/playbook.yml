@@ -1,5 +1,0 @@
----
-- name: Install and configure Mosquitto on all hosts.
-  hosts: networkutils
-  roles:
-    - role: '~/ansible-abel/roles/lnovara.mosquitto'
