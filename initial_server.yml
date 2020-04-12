@@ -17,20 +17,16 @@
         - ~/.ssh/ServerAccess.pub
       enable_passwordless_sudo: false
 
-    - { role: geerlingguy.security,
-        security_sudoers_passwordless: abel,
-        security_autoupdate_mail_to: abelmatser+security@gmail.com
-      }
+    - role: geerlingguy.security
+      security_sudoers_passwordless: abel
+      security_autoupdate_mail_to: abelmatser+security@gmail.com
 
-    - { role: geerlingguy.docker,
-        docker_users: abel
-      }
-    # - { role: geerlingguy.docker_arm,
-    #     docker_users: []
-    #   }
+    - role: geerlingguy.docker
+      docker_users: abel
+    # - role: geerlingguy.docker_arm
+    #   docker_users: []
 
-    - { role: geerlingguy.git
-      }
+    - role: geerlingguy.git
 
     - role: lnovara.mosquitto
       mosquitto_config:
