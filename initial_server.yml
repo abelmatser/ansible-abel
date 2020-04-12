@@ -3,14 +3,14 @@
 
 # ```ansible-playbook initial_server.yml -u root --ask-vault-pass```
 
-
 - name: Create deploy user on networkutils.
   hosts: ansible-client3
   roles:
         
     - role: lnovara.deploy-user
+      become: yes
       user_name: abel
-      user_groups:
+      # user_groups:
         # - users
         # - docker
       public_keys:
@@ -18,17 +18,49 @@
       enable_passwordless_sudo: false
 
     - role: geerlingguy.security
+      become: yes
+      # security_ssh_permit_root_login: "yes"  # default: no
       security_sudoers_passwordless: abel
       security_autoupdate_mail_to: abelmatser+security@gmail.com
 
+
+    - role: grog.user
+      become: yes
+      # user_list: abel
+      user_list:
+        - name: abel
+      user_list:
+        - name: user1
+        - name: user2
+          uid: 1001
+          groups:
+            - test
+            - sudo
+        - name: user3
+          uid: 1002
+          state: absent
+      user_list_host: []
+      user_list_group:
+        - name: user
+          uid: 1001
+        - name: test
+          state: absent
+      user_shell: '/bin/sh'
+      user_system: no
+      user_update_password: always
+
     - role: geerlingguy.docker
-      docker_users: abel
+      become: yes
+      docker_users: docker
     # - role: geerlingguy.docker_arm
+    #   become: yes
     #   docker_users: []
 
     - role: geerlingguy.git
+      become: yes
 
     - role: lnovara.mosquitto
+      become: yes
       mosquitto_config:
         # psk_file: /etc/mosquitto/mosquitto.psk,
         password_file: /etc/mosquitto//mosquitto.passwd
