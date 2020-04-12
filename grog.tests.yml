@@ -1,0 +1,92 @@
+---
+# Networkutils
+
+# ```ansible-playbook initial_server.yml -u root --ask-vault-pass```
+
+- name: Create deploy user on networkutils.
+  hosts: ansible-client4
+  roles:
+  
+    # - role: grog.user
+    #   become: yes
+    #   user_list:
+    #     - name: user1
+    #     - name: user2
+    #       uid: 1001
+    #       groups:
+    #         - test
+    #         - sudo
+    #     - name: user3
+    #       uid: 1002
+    #       state: absent
+    #   user_list_host: []
+    #   user_list_group:
+    #     - name: user
+    #       uid: 1004
+    #     - name: test
+    #       state: absent
+    #   user_remove: no
+    #   user_shell: '/sbin/nologin'
+    #   user_ssh_key_file:
+    #   user_system: no
+    #   user_update_password: always
+
+    # - name: grog2
+    #   role: grog.user
+    #   become: yes
+    #   user_list:
+    #     - name: abelSec
+    #     - name: keylogin
+    #       state: absent
+    #     - name: dockeruser5
+    #       state: absent
+    #     - name: user1
+    #       state: absent
+    #     - name: keylogin2
+    #       state: absent
+    #   user_list_host: []
+    #   user_list_group: []
+    #   user_remove: yes
+    #   user_shell: '/bin/bash'
+    #   user_generate_ssh_key: yes
+    #   # user_ssh_key_file: '.ssh/id_rsa'
+    #   user_system: no
+    #   user_update_password: always
+    #
+    # - role: grog.authorized-key
+    #   become: yes
+    #   authorized_key_list_group:
+    #     - name: abelSec
+    #       authorized_keys:
+    #         - key: "{{ lookup('file', '~/.ssh/ServerAccess.pub') }}"
+    #         # - key: "{{ lookup('file', '/home/john/.ssh/id_rsa.pub') }}"
+    #
+    # - role: grog.sudo
+    #   become: yes
+    #   user_list:
+    #     - name: keylogin
+
+    - role: grog.management-user
+      become: yes
+      management_user_key: "{{ lookup('file', '~/.ssh/ServerAccess.pub') }}"
+
+      management_user_settings:
+        name: abel
+        comment: Ansible
+        shell: '/bin/bash'
+        authorized_keys:
+          - key: "{{ lookup('file', '~/.ssh/ServerAccess.pub') }}"
+          # - key: "{{ management_user_key }}"
+            exclusive: yes  # Whether to remove all other non-specified keys from the authorized_keys file.
+            path: '/home/abel/.ssh/authorized_keys'
+        sudo:
+          hosts: ALL
+          as: ALL
+          commands: ALL
+          nopasswd: yes
+    
+    - role: geerlingguy.security
+      become: yes
+      security_ssh_permit_root_login: "yes"  # default: no
+      security_sudoers_passwordless: abel
+      security_autoupdate_mail_to: abelmatser+security@gmail.com
