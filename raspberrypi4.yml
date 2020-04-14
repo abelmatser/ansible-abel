@@ -6,7 +6,13 @@
 - name: Create deploy user on networkutils.
   hosts: rpi4
   roles:
-        
+
+    ## Install programs
+    # python-pip
+    # (docker.io)
+
+
+
     - role: grog.management-user
       become: yes
       management_user_settings:
@@ -30,6 +36,8 @@
         - name: docker
         - name: ubuntu
           state: absent
+        - name: pi
+          state: absent
       user_remove: yes
       user_shell: '/bin/bash'
       user_ssh_key_file:
@@ -45,9 +53,9 @@
     # - role: geerlingguy.docker
     #   become: yes
     #   docker_users: docker
-    # - role: geerlingguy.docker_arm  # No release candidate yet.
-    #   become: yes
-    #   docker_users: docker
+    - role: geerlingguy.docker_arm  # No release candidate yet.
+      become: yes
+      docker_users: docker
 
     - role: geerlingguy.git
       become: yes
