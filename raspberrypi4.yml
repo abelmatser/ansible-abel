@@ -1,0 +1,69 @@
+---
+# Networkutils
+
+# ```ansible-playbook initial_server.yml -u root --ask-vault-pass```
+
+- name: Create deploy user on networkutils.
+  hosts: rpi4
+  roles:
+        
+    - role: grog.management-user
+      become: yes
+      management_user_settings:
+        name: abel
+        comment: Ansible
+        shell: '/bin/bash'
+        authorized_keys:
+          - key: "{{ lookup('file', '~/.ssh/ServerAccess.pub') }}"
+            exclusive: yes  # Whether to remove all other non-specified keys from the authorized_keys file.
+            path: '/home/abel/.ssh/authorized_keys'
+        sudo:
+          hosts: ALL
+          as: ALL
+          commands: ALL
+          nopasswd: yes
+
+  
+    - role: grog.user
+      become: yes
+      user_list:
+        - name: docker
+        - name: ubuntu
+          state: absent
+      user_remove: yes
+      user_shell: '/bin/bash'
+      user_ssh_key_file:
+      user_system: no
+      user_update_password: always
+    
+    - role: geerlingguy.security
+      become: yes
+      # security_ssh_permit_root_login: "yes"  # default: no
+      security_sudoers_passwordless: abel
+      security_autoupdate_mail_to: abelmatser+security@gmail.com
+
+    # - role: geerlingguy.docker
+    #   become: yes
+    #   docker_users: docker
+    # - role: geerlingguy.docker_arm  # No release candidate yet.
+    #   become: yes
+    #   docker_users: docker
+
+    - role: geerlingguy.git
+      become: yes
+
+    # - role: lnovara.mosquitto
+    #   become: yes
+    #   mosquitto_config:
+    #     # psk_file: /etc/mosquitto/mosquitto.psk,
+    #     password_file: /etc/mosquitto//mosquitto.passwd
+    #   mosquitto_auth_users:
+    #     - name: abel_mosquitto
+    #       state: present
+    #       password: !vault |
+    #             $ANSIBLE_VAULT;1.1;AES256
+    #             30663363333866653839663137643434616662316538633663383537633836376637623762663134
+    #             3963373566393163313630396166393430663839343434300a663766373530376263363666396238
+    #             34663661616535626338613430363634393533643639373265383262616637373665303161653132
+    #             3762323661373164630a326663303837396166386539663931353733613563396234626261346464
+    #             3861
