@@ -5,6 +5,7 @@
 
 - name: Create deploy user on networkutils.
   hosts: rpi4
+  become: yes
   roles:
 
     ## Install programs
@@ -14,13 +15,13 @@
 
 
     - role: grog.management-user
-      become: yes
       management_user_settings:
         name: abel
         comment: Ansible
         shell: '/bin/bash'
         authorized_keys:
           - key: "{{ lookup('file', '~/.ssh/ServerAccess.pub') }}"
+          # keys meerdere devices toevoegen
             exclusive: yes  # Whether to remove all other non-specified keys from the authorized_keys file.
             path: '/home/abel/.ssh/authorized_keys'
         sudo:
@@ -29,11 +30,11 @@
           commands: ALL
           nopasswd: yes
 
-  
     - role: grog.user
-      become: yes
       user_list:
         - name: docker
+          groups:
+            - video  # Jellyfin
         - name: ubuntu
           state: absent
         - name: pi
@@ -45,7 +46,6 @@
       user_update_password: always
     
     - role: geerlingguy.security
-      become: yes
       # security_ssh_permit_root_login: "yes"  # default: no
       security_sudoers_passwordless: abel
       security_autoupdate_mail_to: abelmatser+security@gmail.com
@@ -54,14 +54,17 @@
     #   become: yes
     #   docker_users: docker
     - role: geerlingguy.docker_arm  # No release candidate yet.
-      become: yes
       docker_users: docker
 
+      ## Werkt nog niet
+      ## install docker-compose
+      ## install pip docker
+    # - role: ./deploy-jellyfin
+    #   tags: 'jellyfin'
+
     - role: geerlingguy.git
-      become: yes
 
     # - role: lnovara.mosquitto
-    #   become: yes
     #   mosquitto_config:
     #     # psk_file: /etc/mosquitto/mosquitto.psk,
     #     password_file: /etc/mosquitto//mosquitto.passwd
@@ -75,3 +78,10 @@
     #             34663661616535626338613430363634393533643639373265383262616637373665303161653132
     #             3762323661373164630a326663303837396166386539663931353733613563396234626261346464
     #             3861
+
+    ## Instal ufw
+    # exceptions:
+    # ssh, mosquitto, dockerports
+
+    ## Containers
+

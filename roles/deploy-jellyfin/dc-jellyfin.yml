@@ -1,0 +1,39 @@
+version: "1"
+
+services:
+  jellyfin:
+    # env_file:
+    #   -.env
+    image: linuxserver/jellyfin
+    container_name: "jellyfin"
+    # env_file:
+    #   - .env
+    volumes:
+      - /mnt/toshiba/docker/config/jellyfin:/config
+      - /home/docker/jellyfin_cache:/cache
+      - "/mnt/toshiba/docker/videos/:/media:ro"
+      #- ${DOCKERDIR}/jellyfin:/config
+      #- ${MEDIADIR}/:/media
+      - /opt/vc/lib:/opt/vc/lib
+    ports:
+      - "9007:8096"
+    environment:
+      # - PUID=${PUID}
+      # - PGID=${PGID}
+      # - TZ=${TZ}
+      - PUID=1002  # docker
+      - PGID=1002  # docker
+      - TZ=Europe/Amsterdam
+    devices:
+      - /dev/dri:/dev/dri  # Intel GPU: vaapi
+      - /dev/vc-mem:/dev/vc-mem  # Raspberry Pi MMAL: OpenMax H264 decode
+      - /dev/vchiq:/dev/vchiq  # Raspberry Pi OpenMax video encoding
+      - /dev/video10:/dev/video10  # Raspberry Pi V4L2 video encoding
+      - /dev/video11:/dev/video11  # Raspberry Pi V4L2 video encoding
+      - /dev/video12:/dev/video12  # Raspberry Pi V4L2 video encoding
+    restart: always
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.jellyfin.entrypoints=websecure"
+    #   - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.$MY_DOMAIN`)"
+    #   - "traefik.http.routers.jellyfin.tls.certresolver=lets-encr"
