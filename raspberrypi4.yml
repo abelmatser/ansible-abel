@@ -2,17 +2,12 @@
 # Networkutils
 
 # ```ansible-playbook initial_server.yml -u root --ask-vault-pass```
+# ```ansible-playbook raspberrypi4.yml -u abel --tags "raspberry_pi" -i hosts```
 
 - name: Create deploy user on networkutils.
-  hosts: rpi4
+  hosts: rpi3
   become: yes
   roles:
-
-    ## Install programs
-    # python-pip
-    # (docker.io)
-
-
 
     - role: grog.management-user
       management_user_settings:
@@ -29,6 +24,7 @@
           as: ALL
           commands: ALL
           nopasswd: yes
+      tags: 'initial_setup'
 
     - role: grog.user
       user_list:
@@ -44,25 +40,33 @@
       user_ssh_key_file:
       user_system: no
       user_update_password: always
+      tags: 'initial_setup'
     
     - role: geerlingguy.security
       # security_ssh_permit_root_login: "yes"  # default: no
       security_sudoers_passwordless: abel
       security_autoupdate_mail_to: abelmatser+security@gmail.com
+      tags: 'initial_setup'
 
     # - role: geerlingguy.docker
-    #   become: yes
     #   docker_users: docker
     - role: geerlingguy.docker_arm  # No release candidate yet.
       docker_users: docker
+      # tags: 'initial_setup'
 
-      ## Werkt nog niet
-      ## install docker-compose
-      ## install pip docker
     # - role: ./deploy-jellyfin
     #   tags: 'jellyfin'
 
+    # - role: ./log2ram
+    # # - role: ./raspberry_pi
+    #   tags: 'raspberry_pi'
+
+    - role: ./log2ram_apt
+    # - role: ./raspberry_pi
+      tags: 'raspberry_pi'
+
     - role: geerlingguy.git
+      # tags: 'initial_setup'
 
     # - role: lnovara.mosquitto
     #   mosquitto_config:
