@@ -1,0 +1,43 @@
+---
+# echo "deb http://packages.azlux.fr/debian/ buster main" | sudo tee /etc/apt/sources.list.d/azlux.list
+# wget -qO - https://azlux.fr/repo.gpg.key | sudo apt-key add -
+# apt update
+# apt install log2ram
+
+# - name: Download log2ram services from master branch
+#   get_url:
+#     url: "https://github.com/azlux/log2ram/archive/master.tar.gz"
+#     dest: "/tmp/log2ram.tar.gz"
+#     mode: 0755
+
+- name: Check if log2ram is already installed
+  stat:
+    path: /etc/systemd/system/log2ram.service
+  register: log2ram_installed
+
+
+# https://github.com/azlux/log2ram
+- name: Get packages 
+  shell: echo "deb http://packages.azlux.fr/debian/ buster main" | sudo tee /etc/apt/sources.list.d/azlux.list
+  when: not log2ram_installed.stat.exists
+
+- name: Get key
+  shell: wget -qO - https://azlux.fr/repo.gpg.key | sudo apt-key add -
+  when: not log2ram_installed.stat.exists
+
+# Will not install if log is too big: https://github.com/azlux/log2ram/pull/88
+- name: install log2ram with apt
+  apt:
+    name: log2ram
+    state: present
+    update_cache: yes
+  when: not log2ram_installed.stat.exists
+
+- name: Check if log2ram is succesfully installed
+  stat:
+    path: /etc/systemd/system/log2ram.service
+  register: log2ram_succesfull
+
+- name: 'Fail if log2ram is unsuccesfully installed'
+  fail:
+  when: not log2ram_succesfull.stat.exists
