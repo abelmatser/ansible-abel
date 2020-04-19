@@ -1,0 +1,7 @@
+---
+
+# - include: log2ram.yml
+#   when: log2ram_size is defined
+
+- include: gpu-mem-split.yml
+  when: gpu_mem is defined
