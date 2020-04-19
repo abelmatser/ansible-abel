@@ -1,36 +1,28 @@
 ---
-# - name: Run database container
-#   docker_container:
-#     name: 'database'
-#     image: 'docker.io/centos/postgresql-96-centos7'
-#     state: 'started'
-#     env:
-#       POSTGRESQL_USER: 'user'
-#       POSTGRESQL_PASSWORD: 'password'
-#       POSTGRESQL_DATABASE: 'my_db'
-#   register: db_cont_metadata
+- name: pip remove docker-py
+  pip:
+    name: docker-py
+    state: absent
 
-- ping:
+- name: pip install docker
+  pip:
+    name: docker
+    # state: absent
 
-- name: Re-create a redis container
-  # docker_container:
-  #   name: myredis
-  #   image: redis
-  #   command: redis-server --appendonly yes
-  #   state: present
-  #   recreate: yes
-  #   exposed_ports:
-  #     - 6379
-  #   volumes_from:
-  #     - mydata
+# https://github.com/docker/docker-py/issues/1502
+# sudo cp -r ~/.local/lib/python2.7/site-packages/backports/ssl_match_hostname/ /usr/lib/python2.7/dist-packages/backports
 
-
+- name: Create Jellyfin container
   docker_container:
+    pull: yes
+    restart_policy: always
+    state: started
+    # state: absent
     # env_file:
     #   -.env
     image: linuxserver/jellyfin
     name: "jellyfin"
-    state: present
+    # state: present
     # env_file:
     #   - .env
     volumes:
@@ -60,8 +52,12 @@
     # restart: always
     # labels:
 
-# pip install docker
 
+
+# - name: pip install docker-compose
+#   pip:
+#     name: docker-compose
+#     state: absent
 
 # - name: Tear down existing services
 #   # docker_compose:
