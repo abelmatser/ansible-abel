@@ -10,6 +10,7 @@
 #     dest: "/tmp/log2ram.tar.gz"
 #     mode: 0755
 
+#todo check if armbian-ramlog or other similar thing is already installed
 - name: Check if log2ram is already installed
   stat:
     path: /etc/systemd/system/log2ram.service
